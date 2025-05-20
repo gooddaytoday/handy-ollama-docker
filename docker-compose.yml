@@ -1,0 +1,25 @@
+services:
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    volumes:
+      - ${OLLAMA_DATA_DIR}:/root/.ollama
+      - ./ollama_entrypoint.sh:/ollama_entrypoint.sh
+    ports:
+      - "11434:11434"
+    environment:
+      - LLM_MODEL_NAME=${LLM_MODEL_NAME}
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=compute,utility
+    entrypoint: ["/bin/bash", "/ollama_entrypoint.sh"]
+    runtime: nvidia
+    gpus: all
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:11434 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+volumes:
+  ollama_data:
+    driver: local
