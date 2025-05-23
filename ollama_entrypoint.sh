@@ -1,4 +1,7 @@
 #!/bin/bash
+echo "Running nvidia-smi inside the container:"
+nvidia-smi
+
 echo "Starting Ollama..."
 /bin/ollama serve &
 
